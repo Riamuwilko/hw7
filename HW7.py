@@ -129,8 +129,8 @@ def birthyear_nationality_search(age, country, cur, conn):
                 (country, target_birthyear,)
             )
     players = []
-    for row in cur:
-        players.append(row)
+    for rows in cur:
+        players.append(rows)
     conn.commit()
     return players
 
