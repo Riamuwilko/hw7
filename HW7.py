@@ -99,6 +99,7 @@ def nationality_search(countries, cur, conn):
             )
         for row in cur:
             national_players.append(row)
+    conn.commit()
     return national_players
 
 ## [TASK 3]: 10 points
@@ -130,6 +131,7 @@ def birthyear_nationality_search(age, country, cur, conn):
     players = []
     for row in cur:
         players.append(row)
+    conn.commit()
     return players
 
 
@@ -151,7 +153,21 @@ def birthyear_nationality_search(age, country, cur, conn):
     # HINT: You'll have to use JOIN for this task.
 
 def position_birth_search(position, age, cur, conn):
-       pass
+    target_birthyear = 2023 - age
+    cur.execute(
+                "SELECT Players.name, Positions.position, Players.birthyear "
+                "FROM Players JOIN Positions "
+                "ON Players.position_id = Positions.id "
+                "WHERE Positions.position = ? "
+                "AND birthyear > ? ",
+                (position, target_birthyear,)
+            )
+    players = []
+    for row in cur:
+        players.append(row)
+    return players
+    
+   
 
 
 # [EXTRA CREDIT]
@@ -277,7 +293,7 @@ def main():
     make_positions_table(json_data, cur, conn)
     make_players_table(json_data, cur, conn)
     conn.close()
-
+    
 
     seasons_json_data = read_data('football_PL.json')
     cur2, conn2 = open_database('Football_seasons.db')
